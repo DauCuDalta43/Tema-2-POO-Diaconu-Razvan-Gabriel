@@ -448,6 +448,7 @@ class Player
         block=0;
         if(weak)weak--;
         if(frail)frail--;
+        if(vulnerable)vulnerable--;
     }
 
     void EndCombat()
@@ -580,7 +581,7 @@ class Assasin : public Enemy
         dmg=4*(1.0+0.05*(stage-1));
     }
 
-    void Attack(Player& p)
+    virtual void Attack(Player& p)
     {
         int dmgVar=dmg;
         if(weak)dmgVar*=0.75;
@@ -769,7 +770,7 @@ public:
 class Cultist : public Enemy
 {
     static int enemycount;
-    void Attack(Player& p)
+    virtual void Attack(Player& p)
     {
         int dmgVar=dmg;
         if(weak)dmgVar*=0.75;
@@ -1352,8 +1353,9 @@ void Turn(Player& p, Enemy& e,PotionBelt& pot)
         if(ch=='e')
         {
             h.Endturn();
-            e.Endturn(p);
             p.Endturn();
+            e.Endturn(p);
+
             for(int i=1;i<=100;i++)
                 cout<<"\n";
             return;
@@ -1388,7 +1390,7 @@ void GameOver(int stage)
 
 int Combat(Player& p,int stage, PotionBelt& pot)
 {
-    if(stage%3==1)
+    if(stage%3==0)
     {
         if(stage%2==0)
         {
